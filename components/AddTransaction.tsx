@@ -10,7 +10,6 @@ import {
   DrawerHeader,
   DrawerTrigger,
 } from "@/components/ui/drawer";
-import { PiSlidersBold } from "react-icons/pi";
 import { IoBackspace } from "react-icons/io5";
 import { Plus, X } from "lucide-react";
 import { Input } from "./ui/input";
