@@ -3,7 +3,6 @@ import { Geist, Geist_Mono } from "next/font/google";
 import "./globals.css";
 import BottomMenuBar from "@/components/BottomMenuBar";
 import { ThemeProvider } from "@/context/ThemeProvider";
-import { CounterProvider } from "@/context/decimalContext";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -30,7 +29,6 @@ export default function RootLayout({
       <body
         className={`${geistSans.variable} ${geistMono.variable} antialiased  max-h-[100vh]`}
       >
-        <CounterProvider>
         <ThemeProvider
           attribute="class"
           defaultTheme="system"
@@ -42,7 +40,6 @@ export default function RootLayout({
           </main>
           <BottomMenuBar />
         </ThemeProvider>
-        </CounterProvider>
       </body>
     </html>
   );

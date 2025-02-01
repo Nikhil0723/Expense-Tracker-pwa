@@ -4,7 +4,7 @@ import * as React from "react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Sheet, SheetContent, SheetHeader, SheetTitle, SheetTrigger } from "@/components/ui/sheet";
-import { Plus, Trash } from "lucide-react";
+import { ChevronRight, Plus, Trash } from "lucide-react";
 
 export default function AddGroup() {
   const [groupName, setGroupName] = React.useState("");
@@ -24,7 +24,7 @@ export default function AddGroup() {
   return (
     <Sheet>
       <SheetTrigger asChild>
-        <Button variant="outline">Add Group</Button>
+        <Button variant="outline">Add Group <ChevronRight/></Button>
       </SheetTrigger>
       <SheetContent>
         <SheetHeader>
