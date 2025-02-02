@@ -5,26 +5,24 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Sheet, SheetContent, SheetHeader, SheetTitle, SheetTrigger } from "@/components/ui/sheet";
 import { ChevronRight, Plus, Trash } from "lucide-react";
+import { v4 as uuidv4 } from "uuid"; // Import UUID for unique IDs
+import { useAppSettings } from "@/context/AppSettingContext";
 
 export default function AddGroup() {
   const [groupName, setGroupName] = React.useState("");
-  const [groups, setGroups] = React.useState<string[]>([]);
+  const { settings, addGroup, deleteGroup } = useAppSettings(); // Use context
 
-  const addGroup = () => {
-    if (groupName.trim() && !groups.includes(groupName)) {
-      setGroups([...groups, groupName]);
+  const handleAddGroup = () => {
+    if (groupName.trim() && !settings.groups.some((g) => g.label === groupName)) {
+      addGroup({ uuid: uuidv4(), label: groupName }); // Use context function
       setGroupName(""); // Clear input after adding
     }
-  };
-
-  const removeGroup = (group: string) => {
-    setGroups(groups.filter((g) => g !== group));
   };
 
   return (
     <Sheet>
       <SheetTrigger asChild>
-        <Button variant="outline">Add Group <ChevronRight/></Button>
+        <Button variant="outline">Add Group <ChevronRight /></Button>
       </SheetTrigger>
       <SheetContent>
         <SheetHeader>
@@ -39,20 +37,20 @@ export default function AddGroup() {
             placeholder="Enter group name"
             className="flex-1"
           />
-          <Button onClick={addGroup} size="icon">
+          <Button onClick={handleAddGroup} size="icon">
             <Plus className="h-5 w-5" />
           </Button>
         </div>
 
         {/* Group List */}
-        <div className="mt-4 space-y-2 ">
-          {groups.length === 0 ? (
+        <div className="mt-4 space-y-2">
+          {settings.groups.length === 0 ? (
             <p className="text-gray-500 text-sm">No groups added.</p>
           ) : (
-            groups.map((group, index) => (
-              <div key={index} className="flex items-center justify-between p-2 bg-gray-100 rounded-md">
-                <span>{group}</span>
-                <Button variant="ghost" size="icon" onClick={() => removeGroup(group)}>
+            settings.groups.map((group) => (
+              <div key={group.uuid} className="flex items-center justify-between p-2 bg-gray-100 rounded-md">
+                <span>{group.label}</span>
+                <Button variant="ghost" size="icon" onClick={() => deleteGroup(group.uuid)}>
                   <Trash className="h-5 w-5 text-red-500" />
                 </Button>
               </div>
