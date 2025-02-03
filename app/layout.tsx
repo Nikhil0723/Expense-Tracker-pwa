@@ -4,6 +4,7 @@ import "./globals.css";
 import BottomMenuBar from "@/components/BottomMenuBar";
 import { ThemeProvider } from "@/context/ThemeProvider";
 import { AppSettingsProvider } from "@/context/AppSettingProvider";
+import { TransactionProvider } from "@/context/TransactionProvider";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -29,18 +30,21 @@ export default function RootLayout({
     <html lang="en">
       <body
         className={`${geistSans.variable} ${geistMono.variable} antialiased  max-h-[100vh]`}
-      ><AppSettingsProvider>
-        <ThemeProvider
-          attribute="class"
-          defaultTheme="system"
-          enableSystem
-          disableTransitionOnChange
-        >
-          <main className=" max-w-md mx-auto max-h-full relative dark:shadow-none shadow-md">
-            {children}
-          </main>
-          <BottomMenuBar />
-        </ThemeProvider>
+      >
+        <AppSettingsProvider>
+          <TransactionProvider>
+            <ThemeProvider
+              attribute="class"
+              defaultTheme="system"
+              enableSystem
+              disableTransitionOnChange
+            >
+              <main className=" max-w-md mx-auto max-h-full relative dark:shadow-none shadow-md">
+                {children}
+              </main>
+              <BottomMenuBar />
+            </ThemeProvider>
+          </TransactionProvider>
         </AppSettingsProvider>
       </body>
     </html>
