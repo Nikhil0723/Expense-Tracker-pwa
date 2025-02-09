@@ -1,23 +1,13 @@
-import { Button } from "@/components/ui/button";
+import { Button } from "./ui/button";
 
-const Numpad = () => {
-  const keys = [
-    "1", "2", "3",
-    "4", "5", "6",
-    "7", "8", "9",
-    ".", "0", "✔",
-  ];
+
+const Numpad = ({ onValueChange }: { onValueChange: (value: string) => void }) => {
+  const keys = ["1", "2", "3", "4", "5", "6", "7", "8", "9", ".", "0", "✔"];
 
   return (
-    <div className="grid grid-cols-3 gap-2 w-full ">
-      {keys.map((key, index) => (
-        <Button
-          key={index}
-          variant="secondary"
-          className={` p-10 text-2xl font-semibold  ${
-            key === "✔" ? "bg-black text-white" : "bg-gray-100"
-          }`}
-        >
+    <div className="grid grid-cols-3 gap-2 w-full">
+      {keys.map((key) => (
+        <Button key={key} variant="secondary" className="p-8 text-2xl font-semibold" onClick={() => onValueChange(key)}>
           {key}
         </Button>
       ))}

@@ -9,6 +9,7 @@ export interface Transaction {
   amount: number;
   date: string;
   type: "income" | "expense";
+  frequency: "onetime" | "Every Month" | "Every 3 Month" | "Every 6 Month"  | "Every Year";
   completed: boolean;
 }
 
