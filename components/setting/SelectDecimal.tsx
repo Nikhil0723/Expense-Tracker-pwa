@@ -4,30 +4,10 @@ import { Button } from "@/components/ui/button";
 import { Minus, Plus } from "lucide-react";
 import { useAppSettings } from "@/context/AppSettingContext";
 
-// Utility function to validate and fallback locale
-const isValidLocale = (locale: string): boolean => {
-  try {
-    new Intl.NumberFormat(locale);
-    return true;
-  } catch {
-    return false;
-  }
-};
-
-const getValidLocale = (locale: string | undefined): string => {
-  const defaultLocale = "en-US"; // Default fallback locale
-  if (!locale || !isValidLocale(locale)) {
-    return defaultLocale;
-  }
-  return locale;
-};
 
 const Counter = () => {
   const { settings, updateSetting } = useAppSettings();
   const [count, setCount] = React.useState<number>(settings.decimalLength);
-
-  // Ensure the locale is valid
-  const validLocale = getValidLocale(settings.NumberFormat);
 
   // Function to handle the increase
   const increase = () => {
@@ -36,7 +16,6 @@ const Counter = () => {
     }
   };
 
-  // Function to handle the decrease
   const decrease = () => {
     if (count > 0) {
       setCount(count - 1);

@@ -4,9 +4,22 @@ import React, { useState } from "react";
 import { IoBackspace } from "react-icons/io5";
 import { Plus, X } from "lucide-react";
 import { Button } from "@/components/ui/button";
-import { Drawer, DrawerClose, DrawerContent, DrawerHeader, DrawerTrigger } from "@/components/ui/drawer";
+import {
+  Drawer,
+  DrawerClose,
+  DrawerContent,
+  DrawerHeader,
+  DrawerTrigger,
+} from "@/components/ui/drawer";
 import { Input } from "@/components/ui/input";
-import { Select, SelectContent, SelectGroup, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
+import {
+  Select,
+  SelectContent,
+  SelectGroup,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
 import { DatePicker } from "./DatePicker";
 import Numpad from "./NumPad";
 import { useTransactions } from "@/context/TransactionContext";
@@ -18,7 +31,9 @@ export default function AddTransaction() {
   const [title, setTitle] = useState("");
   const [amount, setAmount] = useState<number | null>(null);
   const [type, setType] = useState<"income" | "expense">("income");
-  const [frequency, setFrequency] = useState<"onetime" | "Every Month" | "Every 3 Month" | "Every 6 Month" | "Every Year">("onetime");
+  const [frequency, setFrequency] = useState<
+    "onetime" | "Every Month" | "Every 3 Month" | "Every 6 Month" | "Every Year"
+  >("onetime");
   const [date, setDate] = useState<Date | undefined>(new Date());
 
   // Handle Numpad input
@@ -30,7 +45,9 @@ export default function AddTransaction() {
         setAmount(Number(amount + "."));
       }
     } else {
-      setAmount((prev) => (prev !== null ? Number(prev.toString() + value) : Number(value)));
+      setAmount((prev) =>
+        prev !== null ? Number(prev.toString() + value) : Number(value)
+      );
     }
   };
 
@@ -80,11 +97,15 @@ export default function AddTransaction() {
 
         {/* Amount Section */}
         <div className="h-[150px] flex items-center justify-end gap-4 mr-8">
-          <h1 className="text-6xl font-medium">${amount !== null ? amount : "0"}</h1>
+          <h1 className="text-6xl font-medium">
+            ${amount !== null ? amount : "0"}
+          </h1>
           <IoBackspace
             size={24}
             className="cursor-pointer"
-            onClick={() => setAmount((prev) => (prev ? Math.floor(prev / 10) : null))}
+            onClick={() =>
+              setAmount((prev) => (prev ? Math.floor(prev / 10) : null))
+            }
           />
         </div>
 
@@ -100,7 +121,10 @@ export default function AddTransaction() {
             />
 
             {/* Transaction Type */}
-            <Select value={type} onValueChange={(value) => setType(value as "income" | "expense")}>
+            <Select
+              value={type}
+              onValueChange={(value) => setType(value as "income" | "expense")}
+            >
               <SelectTrigger className="w-16 h-auto p-2.5">
                 <SelectValue>{type}</SelectValue>
               </SelectTrigger>
@@ -115,7 +139,19 @@ export default function AddTransaction() {
 
           {/* Selection Fields */}
           <div className="flex overflow-x-scroll gap-2 items-center mt-2">
-            <Select value={frequency} onValueChange={(value) => setFrequency(value as any)}>
+            <Select
+              value={frequency}
+              onValueChange={(value) =>
+                setFrequency(
+                  value as
+                    | "onetime"
+                    | "Every Month"
+                    | "Every 3 Month"
+                    | "Every 6 Month"
+                    | "Every Year"
+                )
+              }
+            >
               <SelectTrigger className="w-fit h-auto py-2 px-3 text-base font-medium outline-none bg-black text-white">
                 <SelectValue>{frequency}</SelectValue>
               </SelectTrigger>
