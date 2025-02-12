@@ -4,7 +4,6 @@ import { Button } from "@/components/ui/button";
 import { Minus, Plus } from "lucide-react";
 import { useAppSettings } from "@/context/AppSettingContext";
 
-
 const Counter = () => {
   const { settings, updateSetting } = useAppSettings();
   const [count, setCount] = React.useState<number>(settings.decimalLength);
@@ -24,7 +23,7 @@ const Counter = () => {
 
   React.useEffect(() => {
     updateSetting("decimalLength", count);
-  }, [count]);
+  }, [count, updateSetting]);
 
   return (
     <div className="flex items-center space-x-4">

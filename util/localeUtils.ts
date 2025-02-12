@@ -7,10 +7,11 @@ export const isValidLocale = (locale: string): boolean => {
   }
 };
 
-export const getValidLocale = (locale: string | undefined): string => {
-  const defaultLocale = "en-US"; // Default fallback locale
-  if (!locale || !isValidLocale(locale)) {
+export const getValidLocale = (locale?: string): string => {
+  const defaultLocale = "en-US"; 
+  try {
+    return locale ? new Intl.NumberFormat(locale) && locale : defaultLocale;
+  } catch {
     return defaultLocale;
   }
-  return locale;
 };

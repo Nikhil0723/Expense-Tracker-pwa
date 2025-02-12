@@ -7,64 +7,77 @@ import {
   ChartTooltip,
   ChartTooltipContent,
 } from "@/components/ui/chart";
-const chartData = [
-  { month: "January", desktop: 186, mobile: 80 },
-  { month: "February", desktop: 305, mobile: 200 },
-  { month: "March", desktop: 237, mobile: 120 },
-  { month: "April", desktop: 73, mobile: 190 },
-  { month: "May", desktop: 209, mobile: 130 },
-  { month: "June", desktop: 214, mobile: 140 },
-];
+import { useTransactions } from "@/context/TransactionContext";
 
-const chartConfig = {
-  desktop: {
-    label: "Desktop",
-    color: "hsl(var(--chart-1))",
-  },
-  mobile: {
-    label: "Mobile",
-    color: "hsl(var(--chart-2))",
-  },
-} satisfies ChartConfig;
+const currentYear = new Date().getFullYear();
+
+// Generate an empty dataset for all 12 months
+const generateEmptyChartData = () =>
+  Array.from({ length: 12 }, (_, i) => ({
+    month: new Date(0, i).toLocaleString("en-US", { month: "long" }),
+    income: 0, // ✅ Rename 'mobile' to 'income'
+    expense: 0, // ✅ Rename 'desktop' to 'expense'
+  }));
 
 export default function TransactionChart() {
+  const { transactions } = useTransactions();
+
+  // Filter transactions for the ongoing year
+  const yearlyTransactions = transactions.filter(
+    (t) => new Date(t.date).getFullYear() === currentYear
+  );
+
+  // Aggregate transactions by month
+  const chartData = yearlyTransactions.reduce((acc, transaction) => {
+    const monthIndex = new Date(transaction.date).getMonth(); // 0-based index (Jan = 0)
+    if (transaction.type === "income") {
+      acc[monthIndex].income += transaction.amount; // ✅ Assign correctly
+    } else if (transaction.type === "expense") {
+      acc[monthIndex].expense += transaction.amount; // ✅ Assign correctly
+    }
+    return acc;
+  }, generateEmptyChartData());
+
+  const chartConfig = {
+    income: {
+      label: "Income",
+      color: "hsl(var(--chart-2))", // ✅ Set the correct color for Income
+    },
+    expense: {
+      label: "Expense",
+      color: "hsl(var(--chart-1))", // ✅ Set the correct color for Expense
+    },
+  } satisfies ChartConfig;
+
   return (
     <ChartContainer config={chartConfig}>
-      <AreaChart
-        accessibilityLayer
-        data={chartData}
-        margin={{
-          left: 12,
-          right: 12,
-        }}
-      >
+      <AreaChart accessibilityLayer data={chartData}>
         <CartesianGrid vertical={false} />
-        <XAxis
-          dataKey="month"
-          tickLine={false}
-          axisLine={false}
-          tickMargin={8}
-          tickFormatter={(value) => value.slice(0, 3)}
-        />
+
+        {/* Hide X-Axis Labels */}
+        <XAxis dataKey="month" tick={false} axisLine={false} />
+
+        {/* Tooltip for showing month and values */}
         <ChartTooltip
           cursor={false}
           content={<ChartTooltipContent indicator="dot" />}
         />
+
         <Area
-          dataKey="mobile"
-          type="natural"
-          fill="var(--color-mobile)"
+          dataKey="income" // ✅ Now correct
+          type="monotone"
+          fill="var(--color-income)" // ✅ Should match Income color
           fillOpacity={0.4}
-          stroke="var(--color-mobile)"
+          stroke="var(--color-income)"
           stackId="a"
         />
         <Area
-          dataKey="desktop"
-          type="natural"
-          fill="var(--color-desktop)"
+          dataKey="expense" // ✅ Now correct
+          type="monotone"
+          fill="var(--color-expense)" // ✅ Should match Expense color
           fillOpacity={0.4}
-          stroke="var(--color-desktop)"
-          stackId="a"
+          stroke="var(--color-expense)"
+          stackId="b"
         />
       </AreaChart>
     </ChartContainer>

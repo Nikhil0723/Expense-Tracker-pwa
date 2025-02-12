@@ -3,7 +3,6 @@
 import React, { useState } from "react";
 import { IoBackspace } from "react-icons/io5";
 import { Plus, X } from "lucide-react";
-import { Button } from "@/components/ui/button";
 import {
   Drawer,
   DrawerClose,
@@ -81,17 +80,13 @@ export default function AddTransaction() {
         asChild
         className="w-full h-full flex items-center justify-center bg-white hover:bg-slate-50"
       >
-        <Button variant="outline">
-          <Plus size={28} />
-        </Button>
+        <Plus size={20} />
       </DrawerTrigger>
 
       <DrawerContent className="h-full max-w-md mx-auto">
         <DrawerHeader className="flex justify-start">
           <DrawerClose>
-            <Button variant="ghost">
               <X />
-            </Button>
           </DrawerClose>
         </DrawerHeader>
 
