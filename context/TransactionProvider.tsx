@@ -11,14 +11,20 @@ const loadTransactions = (): Transaction[] => {
   return storedData ? JSON.parse(storedData) : [];
 };
 
-export const TransactionProvider = ({ children }: { children: React.ReactNode }) => {
-  const [transactions, setTransactions] = useState<Transaction[]>(loadTransactions);
+export const TransactionProvider = ({
+  children,
+}: {
+  children: React.ReactNode;
+}) => {
+  const [transactions, setTransactions] =
+    useState<Transaction[]>(loadTransactions);
 
   // Save transactions to localStorage whenever they change
   useEffect(() => {
     localStorage.setItem("transactions", JSON.stringify(transactions));
   }, [transactions]);
 
+ 
   // Add Transaction
   const addTransaction = (transaction: Omit<Transaction, "id">) => {
     setTransactions((prev) => {
@@ -31,17 +37,24 @@ export const TransactionProvider = ({ children }: { children: React.ReactNode })
   // Delete Transaction
   const deleteTransaction = (id: string) => {
     setTransactions((prev) => {
-      const newTransactions = prev.filter((transaction) => transaction.id !== id);
+      const newTransactions = prev.filter(
+        (transaction) => transaction.id !== id
+      );
       localStorage.setItem("transactions", JSON.stringify(newTransactions));
       return newTransactions;
     });
   };
 
   // Edit Transaction
-  const editTransaction = (id: string, updatedTransaction: Partial<Transaction>) => {
+  const editTransaction = (
+    id: string,
+    updatedTransaction: Partial<Transaction>
+  ) => {
     setTransactions((prev) => {
       const newTransactions = prev.map((transaction) =>
-        transaction.id === id ? { ...transaction, ...updatedTransaction } : transaction
+        transaction.id === id
+          ? { ...transaction, ...updatedTransaction }
+          : transaction
       );
       localStorage.setItem("transactions", JSON.stringify(newTransactions));
       return newTransactions;
@@ -52,7 +65,9 @@ export const TransactionProvider = ({ children }: { children: React.ReactNode })
   const toggleTransactionCompletion = (id: string) => {
     setTransactions((prev) => {
       const newTransactions = prev.map((transaction) =>
-        transaction.id === id ? { ...transaction, completed: !transaction.completed } : transaction
+        transaction.id === id
+          ? { ...transaction, completed: !transaction.completed }
+          : transaction
       );
       localStorage.setItem("transactions", JSON.stringify(newTransactions));
       return newTransactions;
@@ -61,7 +76,13 @@ export const TransactionProvider = ({ children }: { children: React.ReactNode })
 
   return (
     <TransactionContext.Provider
-      value={{ transactions, addTransaction, deleteTransaction, editTransaction, toggleTransactionCompletion }}
+      value={{
+        transactions,
+        addTransaction,
+        deleteTransaction,
+        editTransaction,
+        toggleTransactionCompletion,
+      }}
     >
       {children}
     </TransactionContext.Provider>

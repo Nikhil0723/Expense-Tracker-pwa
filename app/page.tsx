@@ -9,7 +9,7 @@ export default function Home() {
   const [selectedMonth, setSelectedMonth] = useState(new Date());
 
   return (
-    <div className="h-[100vh]">
+    <div className="max-h-[100vh] h-[100vh] ">
       {/* Month Slider */}
       <MonthSlider onMonthChange={(month) => setSelectedMonth(month)} />
 

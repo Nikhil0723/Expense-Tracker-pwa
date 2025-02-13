@@ -11,12 +11,12 @@ import { MdDeleteForever } from "react-icons/md";
 import { CiExport } from "react-icons/ci";
 import { ModeToggle } from "@/components/setting/ThemeToggle";
 import { LanguageSelect } from "@/components/setting/SelectLanguage";
-import { CurrencySelect } from "@/components/setting/SelectCurrency";
 import SelectDecimal from "@/components/setting/SelectDecimal";
 import { NumberFormatSelect } from "@/components/setting/SelectNumberFormat";
 import AddGroup from "@/components/setting/AddGroup";
 import AddTag from "@/components/setting/AddTag";
 import DeleteData from "@/components/setting/DeleteData";
+import CurrencySelect from "@/components/setting/SelectCurrency";
 
 const page = () => {
   return (

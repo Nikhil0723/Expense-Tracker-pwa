@@ -50,8 +50,8 @@ const TransactionCard = ({ transaction }: TransactionCardProps) => {
           }`}
         >
           {transaction.type === "expense"
-            ? `- $${transaction.amount}`
-            : `+ $${transaction.amount}`}
+            ? ` ${transaction.currency}${transaction.amount}`
+            : ` ${transaction.currency}${transaction.amount}`}
         </p>
         <TransactionOptionsPopover
           onEdit={handleEdit}

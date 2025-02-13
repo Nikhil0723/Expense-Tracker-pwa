@@ -42,7 +42,7 @@ const NavItem = ({
 }) => (
   <Link
     href={href}
-    className="w-full h-full flex items-center justify-center hover:bg-slate-50 group"
+    className="w-full h-full flex items-center justify-center hover:bg-slate-50 bg-white group"
   >
     <div className="text-gray-500 group-hover:text-black group-active:fill-black transition">
       {children}

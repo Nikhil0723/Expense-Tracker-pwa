@@ -2,15 +2,29 @@
 
 import { createContext, useContext } from "react";
 
+
+interface Group { 
+  uuid: string;
+  label: string;
+} 
+interface Tag { 
+  uuid: string;
+  label: string;
+  color: string;
+} 
+
 // Define Transaction Type
 export interface Transaction {
   id: string;
   title: string;
-  amount: number;
+  amount: number ;
   date: string;
   type: "income" | "expense";
   frequency: "onetime" | "Every Month" | "Every 3 Month" | "Every 6 Month"  | "Every Year";
   completed: boolean;
+  currency: string | undefined;
+  tags?: Tag[];
+  group?: Group;
 }
 
 // Define Context Type

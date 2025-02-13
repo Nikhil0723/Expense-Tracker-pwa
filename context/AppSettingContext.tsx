@@ -17,7 +17,7 @@ interface Tag {
 // Define AppSetting interface
 interface AppSetting {
   language: string;
-  mainCurrency: string;
+  mainCurrency: string ;
   decimalLength: number;
   NumberFormat: string;
   groups: Group[];

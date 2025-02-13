@@ -1,6 +1,4 @@
 "use client";
-
-import * as React from "react";
 import {
   Select,
   SelectContent,
@@ -8,37 +6,29 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-import { ChevronDown } from "lucide-react";
 import { useAppSettings } from "@/context/AppSettingContext";
+import { currencies } from "@/lib/currency";
 
-export function CurrencySelect() {
+const CurrencySelector = () => {
   const { settings, updateSetting } = useAppSettings();
-
-  // Currency options (symbol mapping)
-  const currencyOptions = [
-    { value: "$", label: "US Dollar" },
-    { value: "€", label: "Euro" },
-    { value: "£", label: "British Pound" },
-    { value: "₹", label: "Indian Rupee" },
-    { value: "¥", label: "Japanese Yen" },
-    { value: "¥", label: "Chinese Yuan" },
-  ];
 
   return (
     <Select
-      onValueChange={(value) => updateSetting("mainCurrency", value)}
       value={settings.mainCurrency}
+      onValueChange={(value) => updateSetting("mainCurrency", value)}
     >
-      <SelectTrigger className="w-fit gap-2">
-        <SelectValue placeholder="Select currency" /> <ChevronDown size={16} />
+      <SelectTrigger className="w-[200px]">
+        <SelectValue placeholder="Select Currency" />
       </SelectTrigger>
       <SelectContent>
-        {currencyOptions.map((option) => (
-          <SelectItem key={option.value} value={option.value}>
-            {option.label}
+        {currencies.map((currency) => (
+          <SelectItem key={currency.iso_code} value={currency.symbol}>
+            {currency.name} ({currency.symbol})
           </SelectItem>
         ))}
       </SelectContent>
     </Select>
   );
-}
+};
+
+export default CurrencySelector;

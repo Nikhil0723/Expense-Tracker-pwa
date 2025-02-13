@@ -27,7 +27,7 @@ const MonthSlider = ({ onMonthChange }: MonthSliderProps) => {
   };
 
   return (
-    <div className="flex items-center justify-around mx-8 py-8">
+    <div className="flex items-center justify-around mx-8 py-6">
       {/* Previous Month Button */}
       <Button variant="ghost" size="icon" onClick={goToPreviousMonth}>
         <ChevronLeft />

@@ -27,7 +27,7 @@ interface AppSetting {
 export const AppSettingsProvider = ({ children }: { children: ReactNode }) => {
   const [settings, setSettings] = useState<AppSetting>({
     language: "en",
-    mainCurrency: "USD",
+    mainCurrency: "$",
     decimalLength: 2,
     NumberFormat: "1,234.56",
     groups: [],
@@ -42,12 +42,13 @@ export const AppSettingsProvider = ({ children }: { children: ReactNode }) => {
   });
 
   // Update a single setting dynamically
-  const updateSetting = <K extends keyof AppSetting>(
-    key: K,
-    value: AppSetting[K]
-  ) => {
-    setSettings((prev) => ({ ...prev, [key]: value }));
+  const updateSetting = (key: keyof AppSetting, value: string | number | Group[] | Tag[] | undefined) => {
+    setSettings((prev) => {
+      if (prev[key] === value) return prev; // Prevent unnecessary updates
+      return { ...prev, [key]: value };
+    });
   };
+  
 
   // Group Management
   const addGroup = (group: Group) => {

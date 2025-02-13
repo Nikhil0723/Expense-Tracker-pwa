@@ -53,7 +53,7 @@ export default function TransactionTab({ selectedMonth }: TransactionTabProps) {
 
       {/* Income Tab */}
       <TabsContent value="income" className="p-0 m-0 h-full">
-        <ScrollArea className="h-[420px] w-full rounded-md">
+        <ScrollArea className="h-[350px] w-full rounded-md">
           {incomeTransactions.length > 0 ? (
             incomeTransactions.map((transaction) => (
               <TransactionCard key={transaction.id} transaction={transaction} />
