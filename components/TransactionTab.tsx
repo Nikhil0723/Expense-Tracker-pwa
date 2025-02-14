@@ -5,14 +5,12 @@ import { Button } from "./ui/button";
 import TransactionCard from "./TransactionCard";
 import { ScrollArea } from "./ui/scroll-area";
 import { useTransactions } from "@/context/TransactionContext";
-import { useAppSettings } from "@/context/AppSettingContext";
 
 interface TransactionTabProps {
   selectedMonth: Date; // The currently selected month
 }
 
 export default function TransactionTab({ selectedMonth }: TransactionTabProps) {
-  const { settings } = useAppSettings();
   const { transactions } = useTransactions();
 
   // Helper function to check if a transaction belongs to the selected month
