@@ -1,17 +1,21 @@
 "use client";
-import React, { useState } from "react";
+import React, { useState, useCallback } from "react";
 import MonthSlider from "@/components/MonthSlider";
 import TransactionTab from "@/components/TransactionTab";
 import TotalAmount from "@/components/TotalAmout";
 
 export default function Home() {
-  // State to track the currently selected month
   const [selectedMonth, setSelectedMonth] = useState(new Date());
 
+  // Use useCallback to prevent unnecessary re-renders
+  const handleMonthChange = useCallback((month: Date) => {
+    setSelectedMonth(month);
+  }, []);
+
   return (
-    <div className="max-h-[100vh] h-[100vh] ">
+    <div className="h-screen max-h-screen overflow-hidden flex flex-col">
       {/* Month Slider */}
-      <MonthSlider onMonthChange={(month) => setSelectedMonth(month)} />
+      <MonthSlider onMonthChange={handleMonthChange} />
 
       {/* Total Amount */}
       <TotalAmount selectedMonth={selectedMonth} />

@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useCallback, useState } from "react";
+import React, { useCallback, useEffect, useState } from "react";
 import { IoBackspace } from "react-icons/io5";
 import { Plus, X } from "lucide-react";
 import {
@@ -21,7 +21,6 @@ import {
 } from "@/components/ui/select";
 import Numpad from "./NumPad";
 import { useTransactions } from "@/context/TransactionContext";
-import { useRouter } from "next/navigation";
 import { useAppSettings } from "@/context/AppSettingContext";
 import { currencies } from "@/lib/currency";
 
@@ -34,69 +33,110 @@ interface Tag {
 export default function AddTransaction() {
   const { settings } = useAppSettings();
   const { addTransaction } = useTransactions();
-  const router = useRouter();
 
   // State management
   const [open, setOpen] = useState(false);
   const [title, setTitle] = useState("");
-  const [currency, setCurrency] = useState<string>(
+  const [currency, setCurrency] = useState(
     settings.mainCurrency ?? currencies[0].symbol
   );
-  const [amount, setAmount] = useState<number>(0);
+  const [amount, setAmount] = useState("0");
   const [type, setType] = useState<"income" | "expense">("income");
   const [frequency, setFrequency] = useState<
     "onetime" | "Every Month" | "Every 3 Month" | "Every 6 Month" | "Every Year"
   >("onetime");
-  const [date, setDate] = useState<Date | undefined>(new Date());
+  const [date, setDate] = useState(
+    () => new Date().toISOString().split("T")[0]
+  );
   const [selectedTag, setSelectedTag] = useState<Tag | null>(null);
   const [selectedGroup, setSelectedGroup] = useState<string | null>(null);
 
+  useEffect(() => {
+    if (currency !== settings.mainCurrency) {
+      setCurrency(settings.mainCurrency ?? currencies[0].symbol);
+    }
+  }, [settings.mainCurrency]);
+
   const handleAmountChange = (value: string) => {
-    setAmount((prev) => {
-      if (value === "✔") {
-        if (!title || amount === null || !date) return prev; // Prevent unnecessary calls
-        handleSubmit();
-        return prev;
-      } else if (value === ".") {
-        return prev.toString().includes(".") ? prev : parseFloat(prev + ".");
-      } else {
-        return parseFloat(prev.toString() + value);
-      }
-    });
+    if (value === "✔") {
+      handleSubmit();
+      return;
+    }
+    if (value === "." && !amount.includes(".")) {
+      setAmount((prev) => `${prev}${value}`);
+      return;
+    }
+    if (value === "backspace") {
+      setAmount((prev) => (prev.length > 1 ? prev.slice(0, -1) : "0"));
+      return;
+    }
+    setAmount((prev) => (prev === "0" ? value : `${prev}${value}`));
   };
 
-  // Handle transaction submission
+  const getFutureDates = (startDate: string, frequency: string) => {
+    const futureDates: string[] = [];
+    const date = new Date(startDate);
+
+    for (let i = 1; i <= 12; i++) {
+      if (frequency === "Every Month") date.setMonth(date.getMonth() + 1);
+      else if (frequency === "Every 3 Month")
+        date.setMonth(date.getMonth() + 3);
+      else if (frequency === "Every 6 Month")
+        date.setMonth(date.getMonth() + 6);
+      else if (frequency === "Every Year")
+        date.setFullYear(date.getFullYear() + 1);
+      else break;
+
+      futureDates.push(date.toISOString().split("T")[0]);
+    }
+    return futureDates;
+  };
+
   const handleSubmit = useCallback(() => {
-    if (!title || amount === null || !date) {
-      alert("Please fill all fields");
+    const amountNumber = parseFloat(amount);
+    if (!title.trim() || isNaN(amountNumber) || !date) {
+      alert("Please fill all required fields");
       return;
     }
 
-    // Prevent duplicate submission by setting state once before proceeding
+    const transactions = [
+      {
+        title: title.trim(),
+        amount: amountNumber,
+        date,
+        type,
+        frequency,
+        completed: false,
+        currency,
+        tags: selectedTag ? [selectedTag] : [],
+        group:
+          settings.groups.find((group) => group.uuid === selectedGroup) || null,
+      },
+    ];
+
+    if (frequency !== "onetime") {
+      const futureDates = getFutureDates(date, frequency);
+      futureDates.forEach((futureDate) => {
+        transactions.push({
+          ...transactions[0],
+          date: futureDate,
+          completed: false,
+        });
+      });
+    }
+
+    transactions.forEach((tx) => addTransaction(tx));
+
+    // Reset form state
+    setTitle("");
+    setAmount("0");
+    setDate(new Date().toISOString().split("T")[0]);
+    setType("income");
+    setFrequency("onetime");
+    setSelectedTag(null);
+    setSelectedGroup(null);
+    setCurrency(settings.mainCurrency ?? currencies[0].symbol);
     setOpen(false);
-
-    addTransaction({
-      title,
-      amount,
-      date: date.toISOString().split("T")[0],
-      type,
-      frequency,
-      completed: false,
-      currency,
-      tags: selectedTag ? [selectedTag] : [],
-      group: settings.groups.find((group) => group.uuid === selectedGroup),
-    });
-
-    // Reset state after adding
-    setTimeout(() => {
-      setTitle("");
-      setAmount(0);
-      setDate(new Date());
-      setType("income");
-      setFrequency("onetime");
-      setSelectedTag(null);
-      setSelectedGroup(null);
-    }, 300); // Small delay to avoid conflicts
   }, [
     title,
     amount,
@@ -107,6 +147,7 @@ export default function AddTransaction() {
     selectedTag,
     selectedGroup,
     settings.groups,
+    settings.mainCurrency,
     addTransaction,
   ]);
 
@@ -116,10 +157,12 @@ export default function AddTransaction() {
         asChild
         className="w-full h-full flex items-center justify-center bg-white hover:bg-slate-50"
       >
-        <Plus size={20} />
+        <button className="p-2 rounded-full bg-gray-200 hover:bg-gray-300">
+          <Plus size={20} />
+        </button>
       </DrawerTrigger>
 
-      <DrawerContent className="h-full max-w-md mx-auto">
+      <DrawerContent className="h-full max-w-md mx-auto p-4">
         <DrawerHeader className="flex justify-start">
           <DrawerClose>
             <X />
@@ -127,21 +170,22 @@ export default function AddTransaction() {
         </DrawerHeader>
 
         {/* Amount Section */}
-        <div className="h-[150px] flex items-center justify-end gap-4 mr-8">
+        <div className="h-[150px] flex items-center justify-end gap-4">
           <h1 className="text-6xl font-medium">
             {currency}
-            {amount !== null ? amount : "0"}
+            {amount}
           </h1>
           <IoBackspace
             size={24}
             className="cursor-pointer"
             onClick={() =>
-              setAmount((prev) => (prev ? Math.floor(prev / 10) : 0))
+              setAmount((prev) => (prev.length > 1 ? prev.slice(0, -1) : "0"))
             }
           />
         </div>
 
         {/* Transaction Input */}
+
         <div className="mt-2 mx-2">
           <div className="flex gap-2">
             <Input
@@ -182,6 +226,23 @@ export default function AddTransaction() {
                 <SelectGroup>
                   <SelectItem value="income">Income</SelectItem>
                   <SelectItem value="expense">Expense</SelectItem>
+                </SelectGroup>
+              </SelectContent>
+            </Select>
+            <Select
+              value={frequency}
+              onValueChange={(value) => setFrequency(value as typeof frequency)}
+            >
+              <SelectTrigger className="w-32 h-auto p-2.5">
+                <SelectValue>{frequency}</SelectValue>
+              </SelectTrigger>
+              <SelectContent>
+                <SelectGroup>
+                  <SelectItem value="onetime">One Time</SelectItem>
+                  <SelectItem value="Every Month">Every Month</SelectItem>
+                  <SelectItem value="Every 3 Month">Every 3 Months</SelectItem>
+                  <SelectItem value="Every 6 Month">Every 6 Months</SelectItem>
+                  <SelectItem value="Every Year">Every Year</SelectItem>
                 </SelectGroup>
               </SelectContent>
             </Select>
@@ -252,7 +313,7 @@ export default function AddTransaction() {
         </div>
 
         {/* Number Pad */}
-        <div className="mt-2 mx-2">
+        <div className="mt-2">
           <Numpad onValueChange={handleAmountChange} />
         </div>
       </DrawerContent>

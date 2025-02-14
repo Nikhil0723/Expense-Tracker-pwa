@@ -33,12 +33,25 @@ const TransactionCard = ({ transaction }: TransactionCardProps) => {
         />
         <div className="flex flex-col">
           <h5 className="text-sm font-semibold">{transaction.title}</h5>
-          <p className="text-xs text-gray-500">
-            {new Date(transaction.date).toLocaleDateString("en-US", {
-              day: "numeric",
-              month: "short",
-            })}
-          </p>
+          <div className="flex items-center gap-2 text-xs text-gray-500">
+            <p>
+              {new Date(transaction.date).toLocaleDateString("en-US", {
+                day: "numeric",
+                month: "short",
+              })}
+            </p>
+
+            {/* Show tag safely */}
+            {transaction.tags?.length ? (
+              <div className="flex items-center gap-1">
+                <span
+                  className="w-2 h-2 rounded-full"
+                  style={{ backgroundColor: transaction.tags[0].color }}
+                />
+                <span>{transaction.tags[0].label}</span>
+              </div>
+            ) : null}
+          </div>
         </div>
       </div>
 
@@ -49,9 +62,8 @@ const TransactionCard = ({ transaction }: TransactionCardProps) => {
             transaction.type === "expense" ? "text-red-500" : "text-green-500"
           }`}
         >
-          {transaction.type === "expense"
-            ? ` ${transaction.currency}${transaction.amount}`
-            : ` ${transaction.currency}${transaction.amount}`}
+          {transaction.currency}
+          {transaction.amount}
         </p>
         <TransactionOptionsPopover
           onEdit={handleEdit}

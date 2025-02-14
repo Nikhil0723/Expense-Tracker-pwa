@@ -7,7 +7,7 @@ import {
 import { Button } from "@/components/ui/button";
 import { useTransactions } from "@/context/TransactionContext";
 import { useAppSettings } from "@/context/AppSettingContext";
-import { Info, EyeOff, CheckCircle, Clock } from "lucide-react";
+import { EyeOff, CheckCircle, Clock } from "lucide-react";
 
 const TotalAmount = ({ selectedMonth }: { selectedMonth: Date }) => {
   const { transactions } = useTransactions();
@@ -43,21 +43,6 @@ const TotalAmount = ({ selectedMonth }: { selectedMonth: Date }) => {
 
   return (
     <div className="text-center relative">
-      <div className="flex items-center justify-center gap-2 mb-2">
-        <h2 className="text-lg font-semibold">Net Balance</h2>
-        <Popover>
-          <PopoverTrigger asChild>
-            <Info className="w-4 h-4 cursor-pointer text-gray-500 hover:text-gray-700" />
-          </PopoverTrigger>
-          <PopoverContent className="w-64 p-3">
-            <p className="text-sm text-gray-600">
-              This shows your net balance for the selected month. You can switch
-              between different calculation modes using the options below.
-            </p>
-          </PopoverContent>
-        </Popover>
-      </div>
-
       {/* Display the total amount */}
       <div className="text-4xl font-bold mb-4">
         {calculationMode === "hidden" ? (
@@ -89,7 +74,7 @@ const TotalAmount = ({ selectedMonth }: { selectedMonth: Date }) => {
       {/* Popover Trigger Below Total Amount */}
       <div className="flex justify-center mb-2">
         <Popover>
-          <PopoverTrigger asChild > 
+          <PopoverTrigger asChild>
             <Button
               variant="ghost"
               size="sm"

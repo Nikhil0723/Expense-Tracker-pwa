@@ -27,6 +27,7 @@ interface AppSetting {
 // Define the context type
 interface AppSettingsContextType {
   settings: AppSetting;
+  setSettings: (settings: AppSetting) => void;
   updateSetting: <K extends keyof AppSetting>(key: K, value: AppSetting[K]) => void;
   addGroup: (group: Group) => void;
   deleteGroup: (uuid: string) => void;

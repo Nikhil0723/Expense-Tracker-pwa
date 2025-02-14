@@ -5,12 +5,14 @@ import { Button } from "./ui/button";
 import TransactionCard from "./TransactionCard";
 import { ScrollArea } from "./ui/scroll-area";
 import { useTransactions } from "@/context/TransactionContext";
+import { useAppSettings } from "@/context/AppSettingContext";
 
 interface TransactionTabProps {
   selectedMonth: Date; // The currently selected month
 }
 
 export default function TransactionTab({ selectedMonth }: TransactionTabProps) {
+  const { settings } = useAppSettings();
   const { transactions } = useTransactions();
 
   // Helper function to check if a transaction belongs to the selected month
@@ -42,13 +44,15 @@ export default function TransactionTab({ selectedMonth }: TransactionTabProps) {
             Expense
           </TabsTrigger>
         </TabsList>
-        <Button
-          variant="outline"
-          size="icon"
-          className="ml-2 h-auto w-auto p-5"
-        >
-          <ListFilter />
-        </Button>
+        {transactions.length > 0  && (
+          <Button
+            variant="outline"
+            size="icon"
+            className="ml-2 h-auto w-auto p-5"
+          >
+            <ListFilter />
+          </Button>
+        )}
       </div>
 
       {/* Income Tab */}
@@ -68,7 +72,7 @@ export default function TransactionTab({ selectedMonth }: TransactionTabProps) {
 
       {/* Expense Tab */}
       <TabsContent value="expense" className="p-0 m-0 h-full">
-        <ScrollArea className="h-[420px] w-full rounded-md">
+        <ScrollArea className="h-[300px] w-full rounded-md">
           {expenseTransactions.length > 0 ? (
             expenseTransactions.map((transaction) => (
               <TransactionCard key={transaction.id} transaction={transaction} />

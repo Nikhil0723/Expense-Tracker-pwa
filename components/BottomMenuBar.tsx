@@ -10,23 +10,22 @@ import AddTransaction from "./AddTransaction";
 
 const BottomMenuBar = () => {
   return (
-    <div className=" fixed w-full bottom-0 left-0   ">
-      <div className="max-w-md mx-auto flex items-center h-14">
-        {" "}
+    <div className="fixed bottom-0 left-0 w-full bg-white shadow-md">
+      <div className="max-w-md mx-auto flex items-center justify-between h-16 px-4">
         <NavItem href="/">
-          <PiHouseBold className="icon" size={28}/>
+          <PiHouseBold size={24} />
         </NavItem>
         <NavItem href="/insight">
-          <PiChartPieBold className="icon" size={28}/>
+          <PiChartPieBold size={24} />
         </NavItem>
-        <div className="w-full h-full flex items-center justify-center">
+        <div className="w-12 h-12 flex items-center justify-center bg-blue-500 rounded-full shadow-lg">
           <AddTransaction />
         </div>
         <NavItem href="/assets">
-          <PiWalletBold className="icon" size={28}/>
+          <PiWalletBold size={24} />
         </NavItem>
         <NavItem href="/settings">
-          <PiSlidersBold className="icon" size={28}/>
+          <PiSlidersBold size={24} />
         </NavItem>
       </div>
     </div>
@@ -42,11 +41,9 @@ const NavItem = ({
 }) => (
   <Link
     href={href}
-    className="w-full h-full flex items-center justify-center hover:bg-slate-50 bg-white group"
+    className="flex flex-col items-center justify-center text-gray-500 hover:text-black transition w-12 h-12"
   >
-    <div className="text-gray-500 group-hover:text-black group-active:fill-black transition">
-      {children}
-    </div>
+    {children}
   </Link>
 );
 

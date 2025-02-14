@@ -78,6 +78,7 @@ export const TransactionProvider = ({
     <TransactionContext.Provider
       value={{
         transactions,
+        setTransactions,
         addTransaction,
         deleteTransaction,
         editTransaction,
