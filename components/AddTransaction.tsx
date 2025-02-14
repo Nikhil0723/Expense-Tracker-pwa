@@ -219,7 +219,7 @@ export default function AddTransaction() {
               value={type}
               onValueChange={(value) => setType(value as "income" | "expense")}
             >
-              <SelectTrigger className="w-16 h-auto p-2.5">
+              <SelectTrigger className=" w-fit h-auto p-2.5">
                 <SelectValue>{type}</SelectValue>
               </SelectTrigger>
               <SelectContent>
@@ -277,10 +277,10 @@ export default function AddTransaction() {
                   if (tag) setSelectedTag(tag);
                 }}
               >
-                <SelectTrigger className="w-28 h-auto p-2.5">
+                <SelectTrigger className=" w-fit h-auto p-2.5">
                   <SelectValue placeholder="Tags">
                     {selectedTag ? (
-                      <div className="flex items-center gap-1">
+                      <div className="flex items-center gap-2">
                         <span
                           className="w-3 h-3 rounded-full"
                           style={{ backgroundColor: selectedTag.color }}
