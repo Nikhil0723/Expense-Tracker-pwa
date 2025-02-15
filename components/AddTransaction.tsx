@@ -23,6 +23,7 @@ import Numpad from "./NumPad";
 import { useTransactions } from "@/context/TransactionContext";
 import { useAppSettings } from "@/context/AppSettingContext";
 import { currencies } from "@/lib/currency";
+import { DatePicker } from "./DatePicker";
 
 interface Tag {
   uuid: string;
@@ -45,9 +46,8 @@ export default function AddTransaction() {
   const [frequency, setFrequency] = useState<
     "onetime" | "Every Month" | "Every 3 Month" | "Every 6 Month" | "Every Year"
   >("onetime");
-  const [date, setDate] = useState(
-    () => new Date().toISOString().split("T")[0]
-  );
+  const [date, setDate] = useState<Date | undefined>(new Date());
+
   const [selectedTag, setSelectedTag] = useState<Tag | null>(null);
   const [selectedGroup, setSelectedGroup] = useState<string | null>(null);
 
@@ -98,12 +98,12 @@ export default function AddTransaction() {
       alert("Please fill all required fields");
       return;
     }
-
+    const formattedDate = date ? date.toISOString().split("T")[0] : "";
     const transactions = [
       {
         title: title.trim(),
         amount: amountNumber,
-        date,
+        date: formattedDate,
         type,
         frequency,
         completed: false,
@@ -115,7 +115,7 @@ export default function AddTransaction() {
     ];
 
     if (frequency !== "onetime") {
-      const futureDates = getFutureDates(date, frequency);
+      const futureDates = getFutureDates(formattedDate, frequency);
       futureDates.forEach((futureDate) => {
         transactions.push({
           ...transactions[0],
@@ -130,7 +130,7 @@ export default function AddTransaction() {
     // Reset form state
     setTitle("");
     setAmount("0");
-    setDate(new Date().toISOString().split("T")[0]);
+    setDate(new Date());
     setType("income");
     setFrequency("onetime");
     setSelectedTag(null);
@@ -246,6 +246,8 @@ export default function AddTransaction() {
                 </SelectGroup>
               </SelectContent>
             </Select>
+
+            {/* <DatePicker selectedDate={date} onChange={setDate} /> */}
 
             {/* Group Selection */}
             {settings.groups.length > 0 && (
